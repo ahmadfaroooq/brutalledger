@@ -260,8 +260,8 @@ export default function Outreach() {
               onClick={() => setFilter(s)}
               className="px-3 py-1 border-2 text-xs font-bold uppercase tracking-wider transition-colors"
               style={{
-                borderColor: filter === s ? "#C8F135" : "var(--border)",
-                color: filter === s ? "#C8F135" : "var(--text-muted)",
+                borderColor: filter === s ? "var(--accent)" : "var(--border)",
+                color: filter === s ? "var(--accent)" : "var(--text-muted)",
                 background: "transparent",
               }}
             >
@@ -297,7 +297,7 @@ export default function Outreach() {
                 <div
                   key={p.id}
                   className="card-brutal overflow-hidden"
-                  style={{ borderLeft: readyToDM ? "4px solid #C8F135" : undefined }}
+                  style={{ borderLeft: readyToDM ? "4px solid var(--accent)" : undefined }}
                 >
                   <div className="p-4">
                     <div className="flex items-start justify-between">
@@ -316,7 +316,7 @@ export default function Outreach() {
                           </a>
                         )}
                         {readyToDM && (
-                          <div className="mt-1 text-xs font-bold" style={{ color: "#C8F135" }}>
+                          <div className="mt-1 text-xs font-bold" style={{ color: "var(--accent)" }}>
                             READY TO DM
                           </div>
                         )}
