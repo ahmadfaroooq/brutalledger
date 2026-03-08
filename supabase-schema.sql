@@ -6,6 +6,46 @@
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
+
+
+-- ============================================================
+-- TABLE: projects
+-- ============================================================
+CREATE TABLE projects (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL,
+  color TEXT NOT NULL DEFAULT 'var(--accent)',
+  archived BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own projects" ON projects
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- ============================================================
+-- TABLE: tasks
+-- ============================================================
+CREATE TABLE tasks (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE NOT NULL,
+  title TEXT NOT NULL,
+  completed BOOLEAN NOT NULL DEFAULT FALSE,
+  date DATE NOT NULL DEFAULT (NOW() AT TIME ZONE 'Asia/Karachi')::DATE,
+  time_spent_minutes INTEGER NOT NULL DEFAULT 0,
+  timer_started_at TIMESTAMPTZ,
+  priority TEXT NOT NULL DEFAULT 'Medium' CHECK (priority IN ('Low', 'Medium', 'High', 'Urgent')),
+  notes TEXT,
+  completed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own tasks" ON tasks
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
 -- ============================================================
 -- TABLE: habits_log
 -- ============================================================
@@ -98,7 +138,9 @@ CREATE TABLE linkedin_posts (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
   topic TEXT NOT NULL,
-  format TEXT NOT NULL CHECK (format IN ('Text', 'Carousel', 'Image', 'Poll')),
+  format TEXT NOT NULL CHECK (format IN ('Text', 'Carousel', 'Image', 'Poll')) ,
+  content_text TEXT,
+  image_url TEXT,
   date_posted DATE NOT NULL DEFAULT (NOW() AT TIME ZONE 'Asia/Karachi')::DATE,
   impressions_d1 INTEGER DEFAULT 0,
   impressions_d7 INTEGER DEFAULT 0,
@@ -221,3 +263,89 @@ CREATE INDEX idx_linkedin_posts_user_date ON linkedin_posts(user_id, date_posted
 CREATE INDEX idx_income_log_user_date ON income_log(user_id, date);
 CREATE INDEX idx_outreach_prospects_user ON outreach_prospects(user_id);
 CREATE INDEX idx_outreach_comments_prospect ON outreach_comments(prospect_id);
+
+CREATE INDEX idx_projects_user ON projects(user_id);
+CREATE INDEX idx_tasks_user_date ON tasks(user_id, date);
+CREATE INDEX idx_tasks_project ON tasks(project_id);
+
+-- ============================================================
+-- TABLE: journal_entries
+-- ============================================================
+CREATE TABLE journal_entries (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  date DATE NOT NULL,
+  entry_type TEXT NOT NULL CHECK (entry_type IN ('morning', 'evening', 'extended')),
+  mood_score INT CHECK (mood_score BETWEEN 1 AND 10),
+  energy_score INT CHECK (energy_score BETWEEN 1 AND 10),
+  responses JSONB NOT NULL DEFAULT '{}'::jsonb,
+  voice_note_url TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, date, entry_type)
+);
+
+ALTER TABLE journal_entries ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own journal entries" ON journal_entries
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- ============================================================
+-- TABLE: journal_templates
+-- ============================================================
+CREATE TABLE journal_templates (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  entry_type TEXT NOT NULL CHECK (entry_type IN ('morning', 'evening', 'extended')),
+  prompts JSONB NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE journal_templates ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can read templates" ON journal_templates
+  FOR SELECT USING (true);
+
+-- ============================================================
+-- TABLE: journal_tags
+-- ============================================================
+CREATE TABLE journal_tags (
+  id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  name TEXT NOT NULL,
+  color TEXT DEFAULT '#3B82F6',
+  UNIQUE(user_id, name)
+);
+
+ALTER TABLE journal_tags ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own journal tags" ON journal_tags
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- ============================================================
+-- TABLE: journal_entry_tags
+-- ============================================================
+CREATE TABLE journal_entry_tags (
+  entry_id UUID REFERENCES journal_entries(id) ON DELETE CASCADE,
+  tag_id UUID REFERENCES journal_tags(id) ON DELETE CASCADE,
+  PRIMARY KEY (entry_id, tag_id)
+);
+
+ALTER TABLE journal_entry_tags ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own journal entry tags" ON journal_entry_tags
+  FOR ALL USING (
+    EXISTS (
+      SELECT 1 FROM journal_entries je
+      WHERE je.id = journal_entry_tags.entry_id
+      AND je.user_id = auth.uid()
+    )
+  ) WITH CHECK (
+    EXISTS (
+      SELECT 1 FROM journal_entries je
+      WHERE je.id = journal_entry_tags.entry_id
+      AND je.user_id = auth.uid()
+    )
+  );
+
+CREATE INDEX idx_journal_entries_user_date ON journal_entries(user_id, date);
+CREATE INDEX idx_journal_entries_type ON journal_entries(entry_type);
+CREATE INDEX idx_journal_tags_user ON journal_tags(user_id);
+CREATE INDEX idx_journal_entry_tags_entry ON journal_entry_tags(entry_id);
+CREATE INDEX idx_journal_entry_tags_tag ON journal_entry_tags(tag_id);

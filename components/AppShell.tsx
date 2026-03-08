@@ -12,6 +12,7 @@ import Finance from "@/components/modules/Finance";
 import Study from "@/components/modules/Study";
 import Tasks from "@/components/modules/Tasks";
 import Scorecard from "@/components/modules/Scorecard";
+import Journal from "@/components/modules/Journal";
 
 const TABS = [
   { key: "dashboard", label: "DASHBOARD", icon: "◧" },
@@ -20,6 +21,7 @@ const TABS = [
   { key: "sleep", label: "SLEEP", icon: "☾" },
   { key: "outreach", label: "OUTREACH", icon: "→" },
   { key: "content", label: "CONTENT", icon: "◇" },
+  { key: "journal", label: "JOURNAL", icon: "✎" },
   { key: "finance", label: "FINANCE", icon: "₨" },
   { key: "study", label: "STUDY", icon: "▤" },
   { key: "scorecard", label: "SCORECARD", icon: "★" },
@@ -52,6 +54,7 @@ export default function AppShell() {
       case "outreach": return <Outreach />;
       case "content": return <Content />;
       case "finance": return <Finance />;
+      case "journal": return <Journal />;
       case "study": return <Study />;
       case "scorecard": return <Scorecard />;
     }
