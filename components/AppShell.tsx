@@ -12,11 +12,13 @@ import Finance from "@/components/modules/Finance";
 import Study from "@/components/modules/Study";
 import Tasks from "@/components/modules/Tasks";
 import Scorecard from "@/components/modules/Scorecard";
+import Calendar from "@/components/modules/Calendar";
 
 const TABS = [
   { key: "dashboard", label: "DASHBOARD", icon: "◧" },
   { key: "habits", label: "HABITS", icon: "☑" },
   { key: "tasks", label: "TASKS", icon: "⊞" },
+  { key: "calendar", label: "CALENDAR", icon: "▦" },
   { key: "sleep", label: "SLEEP", icon: "☾" },
   { key: "outreach", label: "OUTREACH", icon: "→" },
   { key: "content", label: "CONTENT", icon: "◇" },
@@ -48,6 +50,7 @@ export default function AppShell() {
       case "dashboard": return <Dashboard onNavigate={(tab: string) => setActiveTab(tab as TabKey)} />;
       case "habits": return <Habits />;
       case "tasks": return <Tasks />;
+      case "calendar": return <Calendar />;
       case "sleep": return <Sleep />;
       case "outreach": return <Outreach />;
       case "content": return <Content />;

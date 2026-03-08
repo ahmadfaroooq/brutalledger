@@ -267,3 +267,42 @@ CREATE INDEX idx_outreach_comments_prospect ON outreach_comments(prospect_id);
 CREATE INDEX idx_projects_user ON projects(user_id);
 CREATE INDEX idx_tasks_user_date ON tasks(user_id, date);
 CREATE INDEX idx_tasks_project ON tasks(project_id);
+
+-- ============================================================
+-- CALENDAR MODULE
+-- ============================================================
+
+CREATE TABLE time_blocks (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  date DATE NOT NULL DEFAULT (NOW() AT TIME ZONE 'Asia/Karachi')::DATE,
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  color TEXT DEFAULT '#6FAE2B',
+  category TEXT DEFAULT 'Focus',
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT valid_time_range CHECK (end_time > start_time)
+);
+ALTER TABLE time_blocks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own time blocks" ON time_blocks
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+-- Allow public SELECT for iCal feed (token acts as the secret)
+CREATE POLICY "Public read for iCal feed" ON time_blocks
+  FOR SELECT USING (true);
+
+CREATE TABLE calendar_tokens (
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
+  token UUID DEFAULT gen_random_uuid() NOT NULL UNIQUE,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+ALTER TABLE calendar_tokens ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can manage own calendar token" ON calendar_tokens
+  FOR ALL USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+-- Allow public SELECT so iCal API route can validate tokens
+CREATE POLICY "Public token lookup" ON calendar_tokens
+  FOR SELECT USING (true);
+
+CREATE INDEX idx_time_blocks_user_date ON time_blocks(user_id, date);
+CREATE INDEX idx_calendar_tokens_token ON calendar_tokens(token);
