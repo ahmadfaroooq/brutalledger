@@ -153,7 +153,7 @@ export default function Sleep() {
           <p className="text-text-muted text-body mt-1">Track your rest patterns</p>
         </div>
         <div className="text-right">
-          <div className="font-display text-h1" style={{ color: totalHours >= 7 ? "#C8F135" : totalHours >= 5 ? "#A87820" : "#BF2222" }}>
+          <div className="font-display text-h1" style={{ color: totalHours >= 7 ? "var(--accent)" : totalHours >= 5 ? "#A87820" : "#BF2222" }}>
             {totalHours}h
           </div>
           <div className="label-caps">TOTAL TODAY</div>
@@ -178,7 +178,7 @@ export default function Sleep() {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-display text-h4" style={{ color: "#C8F135" }}>
+              <span className="font-display text-h4" style={{ color: "var(--accent)" }}>
                 {formatDuration(slot.duration_minutes)}
               </span>
               <button onClick={() => deleteSlot(slot.slot_number)} className="btn-destructive text-xs py-1 px-2">
@@ -259,7 +259,7 @@ export default function Sleep() {
                 className="w-full border-2 transition-all"
                 style={{
                   height: `${(d.hours / maxChartHours) * 160}px`,
-                  background: d.date === today ? "#C8F135" : "var(--surface-raised)",
+                  background: d.date === today ? "var(--accent)" : "var(--surface-raised)",
                   borderColor: "var(--border)",
                   minHeight: d.hours > 0 ? 8 : 0,
                 }}

@@ -210,7 +210,7 @@ export default function Scorecard() {
     <div className="flex items-center justify-between py-3 border-b" style={{ borderColor: "var(--border)" }}>
       <span className="label-caps text-xs">{label}</span>
       <div className="flex items-center gap-3">
-        <span className="font-display text-h4" style={{ color: hit ? "#C8F135" : "var(--text-primary)" }}>{value}</span>
+        <span className="font-display text-h4" style={{ color: hit ? "var(--accent)" : "var(--text-primary)" }}>{value}</span>
         <span className="text-xs" style={{ color: "var(--text-muted)" }}>/ {target}</span>
       </div>
     </div>
@@ -260,7 +260,7 @@ export default function Scorecard() {
           <div className="py-3 border-b" style={{ borderColor: "var(--border)" }}>
             <div className="flex justify-between items-center">
               <span className="label-caps text-xs">BEST POST</span>
-              <span className="font-bold text-sm" style={{ color: "#C8F135" }}>{currentWeek.bestPost}</span>
+              <span className="font-bold text-sm" style={{ color: "var(--accent)" }}>{currentWeek.bestPost}</span>
             </div>
           </div>
 
@@ -292,8 +292,8 @@ export default function Scorecard() {
               <span
                 className="px-2 py-1 text-xs font-bold border-2"
                 style={{
-                  borderColor: w.habitsRate >= 80 ? "#C8F135" : w.habitsRate >= 50 ? "#A87820" : "#BF2222",
-                  color: w.habitsRate >= 80 ? "#C8F135" : w.habitsRate >= 50 ? "#A87820" : "#BF2222",
+                  borderColor: w.habitsRate >= 80 ? "var(--accent)" : w.habitsRate >= 50 ? "#A87820" : "#BF2222",
+                  color: w.habitsRate >= 80 ? "var(--accent)" : w.habitsRate >= 50 ? "#A87820" : "#BF2222",
                 }}
               >
                 {w.habitsRate}%
@@ -328,7 +328,7 @@ function MiniStat({ label, value, target, numValue }: { label: string; value: st
   const hit = num >= target;
   return (
     <div>
-      <div className="font-display text-h4" style={{ color: hit ? "#C8F135" : "var(--text-primary)" }}>{value}</div>
+      <div className="font-display text-h4" style={{ color: hit ? "var(--accent)" : "var(--text-primary)" }}>{value}</div>
       <div className="label-caps text-[9px]">{label}</div>
     </div>
   );

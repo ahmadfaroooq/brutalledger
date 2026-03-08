@@ -140,7 +140,7 @@ export default function Study() {
           <p className="text-text-muted text-body mt-1">A Level preparation tracker</p>
         </div>
         <div className="text-right">
-          <div className="font-display text-h2" style={{ color: weeklyTotal >= TARGET_WEEKLY ? "#C8F135" : "var(--text-primary)" }}>
+          <div className="font-display text-h2" style={{ color: weeklyTotal >= TARGET_WEEKLY ? "var(--accent)" : "var(--text-primary)" }}>
             {weeklyTotal}m
           </div>
           <div className="label-caps">THIS WEEK / {TARGET_WEEKLY}m</div>
@@ -148,9 +148,9 @@ export default function Study() {
       </div>
 
       {/* Daily reminder */}
-      <div className="card-brutal p-4" style={{ borderLeft: "4px solid #C8F135" }}>
+      <div className="card-brutal p-4" style={{ borderLeft: "4px solid var(--accent)" }}>
         <span className="label-caps text-[10px]">TODAY&apos;S FOCUS</span>
-        <div className="font-display text-h4 mt-1" style={{ color: "#C8F135" }}>
+        <div className="font-display text-h4 mt-1" style={{ color: "var(--accent)" }}>
           {todaySubjects.join(" & ")}
         </div>
       </div>
@@ -162,7 +162,7 @@ export default function Study() {
           <span className="text-sm font-bold" style={{ color: "var(--text-primary)" }}>{weeklyPercent}%</span>
         </div>
         <div className="w-full h-6 border-2" style={{ borderColor: "var(--border)" }}>
-          <div className="h-full transition-all" style={{ width: `${weeklyPercent}%`, background: "#C8F135" }} />
+          <div className="h-full transition-all" style={{ width: `${weeklyPercent}%`, background: "var(--accent)" }} />
         </div>
       </div>
 
@@ -179,8 +179,8 @@ export default function Study() {
                   onClick={() => setSubject(s)}
                   className="px-3 py-2 border-2 text-xs font-bold uppercase"
                   style={{
-                    borderColor: subject === s ? "#C8F135" : "var(--border)",
-                    background: subject === s ? "#C8F135" : "transparent",
+                    borderColor: subject === s ? "var(--accent)" : "var(--border)",
+                    background: subject === s ? "var(--accent)" : "transparent",
                     color: subject === s ? "#0D0D0D" : "var(--text-muted)",
                   }}
                 >
@@ -227,7 +227,7 @@ export default function Study() {
                 <span className="text-xs font-bold" style={{ color: "var(--text-primary)" }}>{progressPercent}%</span>
               </div>
               <div className="w-full h-4 border-2" style={{ borderColor: "var(--border)" }}>
-                <div className="h-full" style={{ width: `${progressPercent}%`, background: "#C8F135" }} />
+                <div className="h-full" style={{ width: `${progressPercent}%`, background: "var(--accent)" }} />
               </div>
             </div>
           );
@@ -249,7 +249,7 @@ export default function Study() {
                   {e.notes && <p className="text-xs mt-0.5" style={{ color: "var(--text-muted)" }}>{e.notes}</p>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-sm" style={{ color: "#C8F135" }}>{e.minutes}m</span>
+                  <span className="font-bold text-sm" style={{ color: "var(--accent)" }}>{e.minutes}m</span>
                   <button onClick={() => deleteEntry(e.id)} className="text-crimson text-xs font-bold">✕</button>
                 </div>
               </div>
