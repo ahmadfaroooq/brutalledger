@@ -1,0 +1,185 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #F2EDE4;
+  --surface: #FFFFFF;
+  --surface-raised: #F7F3EC;
+  --border: #1A1A1A;
+  --text-primary: #0D0D0D;
+  --text-muted: #6B6560;
+  --shadow-color: #1A1A1A;
+}
+
+.dark {
+  --bg: #0D0D0D;
+  --surface: #141414;
+  --surface-raised: #1C1C1C;
+  --border: #2A2A2A;
+  --text-primary: #F0EDE6;
+  --text-muted: #888880;
+  --shadow-color: #000000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-inter), sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+/* Remove all border-radius overrides */
+input, select, textarea, button {
+  border-radius: 0 !important;
+}
+
+/* Focus styles */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #C8F135 !important;
+}
+
+/* Number input hide spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@layer components {
+  .card-brutal {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    box-shadow: 4px 4px 0px var(--shadow-color);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .card-brutal-interactive:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px var(--shadow-color);
+  }
+
+  .btn-primary {
+    background: #C8F135;
+    color: #0D0D0D;
+    border: 2px solid #0D0D0D;
+    box-shadow: 3px 3px 0px #0D0D0D;
+    font-family: var(--font-inter), sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-size: 13px;
+  }
+  .btn-primary:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px #0D0D0D;
+  }
+  .btn-primary:active {
+    transform: translate(3px, 3px);
+    box-shadow: 0px 0px 0px #0D0D0D;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    box-shadow: 3px 3px 0px var(--shadow-color);
+    font-family: var(--font-inter), sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-size: 13px;
+  }
+  .btn-secondary:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px var(--shadow-color);
+  }
+
+  .btn-destructive {
+    background: #BF2222;
+    color: #FFFFFF;
+    border: 2px solid #0D0D0D;
+    box-shadow: 3px 3px 0px #0D0D0D;
+    font-family: var(--font-inter), sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: transform 0.1s, box-shadow 0.1s;
+    font-size: 13px;
+  }
+  .btn-destructive:hover {
+    transform: translate(2px, 2px);
+    box-shadow: 1px 1px 0px #0D0D0D;
+  }
+
+  .input-brutal {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    color: var(--text-primary);
+    padding: 10px 14px;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 14px;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+
+  .label-caps {
+    font-family: var(--font-inter), sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-muted);
+  }
+
+  .stat-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    box-shadow: 4px 4px 0px var(--shadow-color);
+    padding: 20px;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border: 2px solid;
+    font-family: var(--font-inter), sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
