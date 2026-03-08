@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/auth-context";
-import { getPKTDate, getWeekStart, getWeekEnd, PROSPECT_STATUSES, STATUS_COLORS } from "@/lib/utils";
+import { getPKTDate, getWeekStart, getWeekEnd, getMonthStart, getMonthEnd, PROSPECT_STATUSES, STATUS_COLORS } from "@/lib/utils";
 
 interface Prospect {
   id: string;
@@ -21,6 +21,9 @@ export default function Outreach() {
   const [dmCount, setDmCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const [weeklyDms, setWeeklyDms] = useState(0);
+  const [weeklyComments, setWeeklyComments] = useState(0);
+  const [monthlyDms, setMonthlyDms] = useState(0);
+  const [monthlyComments, setMonthlyComments] = useState(0);
   const [prospects, setProspects] = useState<Prospect[]>([]);
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
@@ -52,11 +55,24 @@ export default function Outreach() {
     const weekEnd = getWeekEnd(weekStart);
     const { data: weekData } = await supabase
       .from("outreach_daily_count")
-      .select("dm_count")
+      .select("dm_count, comment_count")
       .eq("user_id", user.id)
       .gte("date", weekStart)
       .lte("date", weekEnd);
     setWeeklyDms(weekData?.reduce((s, r) => s + r.dm_count, 0) ?? 0);
+    setWeeklyComments(weekData?.reduce((s, r) => s + r.comment_count, 0) ?? 0);
+
+    // Monthly
+    const monthStart = getMonthStart(today);
+    const monthEnd = getMonthEnd(today);
+    const { data: monthData } = await supabase
+      .from("outreach_daily_count")
+      .select("dm_count, comment_count")
+      .eq("user_id", user.id)
+      .gte("date", monthStart)
+      .lte("date", monthEnd);
+    setMonthlyDms(monthData?.reduce((s, r) => s + r.dm_count, 0) ?? 0);
+    setMonthlyComments(monthData?.reduce((s, r) => s + r.comment_count, 0) ?? 0);
   };
 
   const updateCount = async (type: "dm" | "comment", delta: number) => {
@@ -72,6 +88,10 @@ export default function Outreach() {
     );
     if (type === "dm") {
       setWeeklyDms((prev) => prev + delta);
+      setMonthlyDms((prev) => prev + delta);
+    } else {
+      setWeeklyComments((prev) => prev + delta);
+      setMonthlyComments((prev) => prev + delta);
     }
   };
 
@@ -173,24 +193,31 @@ export default function Outreach() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="card-brutal p-6 text-center">
           <div className="label-caps mb-2">DMs SENT TODAY</div>
-          <div className="font-display text-h1" style={{ color: dmCount >= 10 ? "#C8F135" : "var(--text-primary)" }}>
+          <div className="font-display text-h1" style={{ color: dmCount >= 10 ? "var(--accent)" : "var(--text-primary)" }}>
             {dmCount}<span className="text-h3" style={{ color: "var(--text-muted)" }}>/10</span>
           </div>
           <div className="flex items-center justify-center gap-3 mt-4">
             <button onClick={() => updateCount("dm", -1)} className="btn-secondary py-2 px-4 text-lg">−</button>
             <button onClick={() => updateCount("dm", 1)} className="btn-primary py-3 px-6 text-lg">+</button>
           </div>
-          <div className="label-caps mt-3 text-[10px]">WEEKLY: {weeklyDms}/50</div>
+          <div className="flex justify-center gap-4 mt-3">
+            <span className="label-caps text-[10px]">WEEKLY: <strong style={{ color: weeklyDms >= 50 ? "var(--accent)" : "var(--text-primary)" }}>{weeklyDms}</strong>/50</span>
+            <span className="label-caps text-[10px]">MONTHLY: <strong style={{ color: "var(--text-primary)" }}>{monthlyDms}</strong></span>
+          </div>
         </div>
 
         <div className="card-brutal p-6 text-center">
           <div className="label-caps mb-2">COMMENTS TODAY</div>
-          <div className="font-display text-h1" style={{ color: commentCount >= 10 ? "#C8F135" : "var(--text-primary)" }}>
+          <div className="font-display text-h1" style={{ color: commentCount >= 10 ? "var(--accent)" : "var(--text-primary)" }}>
             {commentCount}<span className="text-h3" style={{ color: "var(--text-muted)" }}>/10</span>
           </div>
           <div className="flex items-center justify-center gap-3 mt-4">
             <button onClick={() => updateCount("comment", -1)} className="btn-secondary py-2 px-4 text-lg">−</button>
             <button onClick={() => updateCount("comment", 1)} className="btn-primary py-3 px-6 text-lg">+</button>
+          </div>
+          <div className="flex justify-center gap-4 mt-3">
+            <span className="label-caps text-[10px]">WEEKLY: <strong style={{ color: weeklyComments >= 50 ? "var(--accent)" : "var(--text-primary)" }}>{weeklyComments}</strong>/50</span>
+            <span className="label-caps text-[10px]">MONTHLY: <strong style={{ color: "var(--text-primary)" }}>{monthlyComments}</strong></span>
           </div>
         </div>
       </div>
