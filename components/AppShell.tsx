@@ -32,7 +32,7 @@ export default function AppShell() {
 
   const renderModule = () => {
     switch (activeTab) {
-      case "dashboard": return <Dashboard onNavigate={setActiveTab} />;
+      case "dashboard": return <Dashboard onNavigate={(tab: string) => setActiveTab(tab as TabKey)} />;
       case "habits": return <Habits />;
       case "sleep": return <Sleep />;
       case "outreach": return <Outreach />;
