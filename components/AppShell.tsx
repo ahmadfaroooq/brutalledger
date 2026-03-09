@@ -61,9 +61,12 @@ export default function AppShell() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+    <div className="min-h-screen">
       {/* Desktop Nav */}
-      <nav className="hidden md:flex items-center justify-between px-6 py-3 border-b-2" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
+      <nav
+        className="hidden md:flex items-center justify-between px-6 py-3 sticky top-0 z-40 border-b glass"
+        style={{ borderColor: "var(--border)" }}
+      >
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-3">
             <Monogram />
@@ -91,19 +94,22 @@ export default function AppShell() {
         <div className="flex items-center gap-3">
           <button
             onClick={toggleTheme}
-            className="w-10 h-10 border-2 flex items-center justify-center text-lg transition-transform hover:translate-x-[1px] hover:translate-y-[1px]"
-            style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
+            className="w-9 h-9 flex items-center justify-center text-lg transition-opacity hover:opacity-70"
+            style={{ color: "var(--text-primary)" }}
           >
             {theme === "dark" ? "☀" : "☾"}
           </button>
-          <button onClick={signOut} className="btn-secondary text-xs py-2 px-3">
+          <button onClick={signOut} className="btn-secondary text-xs py-1.5 px-3">
             SIGN OUT
           </button>
         </div>
       </nav>
 
       {/* Mobile top bar */}
-      <div className="md:hidden flex items-center justify-between px-4 py-3 border-b-2" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
+      <div
+        className="md:hidden flex items-center justify-between px-4 py-3 sticky top-0 z-40 border-b glass"
+        style={{ borderColor: "var(--border)" }}
+      >
         <div className="flex items-center gap-2">
           <Monogram />
           <h1 className="font-display text-lg" style={{ color: "var(--text-primary)" }}>
@@ -113,8 +119,8 @@ export default function AppShell() {
         <div className="flex items-center gap-2">
           <button
             onClick={toggleTheme}
-            className="w-9 h-9 border-2 flex items-center justify-center"
-            style={{ borderColor: "var(--border)", color: "var(--text-primary)", background: "var(--surface)" }}
+            className="w-9 h-9 flex items-center justify-center"
+            style={{ color: "var(--text-primary)" }}
           >
             {theme === "dark" ? "☀" : "☾"}
           </button>
@@ -130,7 +136,10 @@ export default function AppShell() {
       </main>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t-2 flex overflow-x-auto" style={{ background: "var(--surface)", borderColor: "var(--border)" }}>
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 border-t glass flex overflow-x-auto z-40"
+        style={{ borderColor: "var(--border)" }}
+      >
         {TABS.map((tab) => (
           <button
             key={tab.key}
